@@ -1,4 +1,6 @@
 import random
+from operator import itemgetter
+from natsort import natsorted
 from cards import createCards
 # from termcolor import colored
 
@@ -58,6 +60,10 @@ def main():
                 decision.strip()
                 if decision == 'HIT':
                     playerHand.append(deck.pop(0))
+                    for card in playerHand:
+                        if card[0] == 'A':
+                            playerHand.remove(card)
+                            playerHand.append(card)
                     print("New hand: ", *playerHand)
                     playerValue=handCalculator(playerHand)
                     print("You now have: ", playerValue)
@@ -66,11 +72,18 @@ def main():
             if playerValue>21:
                 print("Bust :(")
                 dealerWins+=1
+            elif playerValue == 21:
+                print("21! You win!")
+                playerWins+=1
             else:
                 print("The dealer has ", *dealerHand, " which is a value of ", dealerValue)
                 while ((dealerValue<17) and (dealerValue<playerValue)):
                     print("The dealer hits...")
                     dealerHand.append(deck.pop(0))
+                    for card in dealerHand:
+                        if card[0] == 'A':
+                            dealerHand.remove(card)
+                            dealerHand.append(card)
                     dealerValue=handCalculator(dealerHand)
                     print("The dealer now has ", *dealerHand, " which is a value of ", dealerValue)
                     if dealerValue>21: 
