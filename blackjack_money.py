@@ -1,6 +1,4 @@
 import random
-from operator import itemgetter
-from natsort import natsorted
 from cards import createCards
 # from termcolor import colored
 
@@ -62,7 +60,7 @@ def main():
             else:
                 break
         if playerValue == 21:
-            print("21! You win!")
+            print("21! You win! :)")
             playermoney+=(bet+buyin)
         else:
             while(decision != 'STAY'):
@@ -85,7 +83,7 @@ def main():
                 print("Bust :(")
                 playermoney-=(bet+buyin)
             elif playerValue == 21:
-                print("21! You win!")
+                print("21! You win! :)")
                 playermoney+=(bet+buyin)
             else:
                 print("The dealer has ", *dealerHand, " which is a value of ", dealerValue)
@@ -99,16 +97,18 @@ def main():
                     dealerValue=handCalculator(dealerHand)
                     print("The dealer now has ", *dealerHand, " which is a value of ", dealerValue)
                     if dealerValue>21: 
-                        print("Dealer busts. You Win!")
+                        print("Dealer busts. You Win! :)")
                         playermoney+=(bet+buyin)
                 if dealerValue>21:
                     continue
                 elif (dealerValue<playerValue):
-                    print("You have ", playerValue, " and the dealer has ", dealerValue, "\nYou win!")
+                    print("You have ", playerValue, " and the dealer has ", dealerValue, "\nYou win! :)")
                     playermoney+=(bet+buyin)
                 elif(dealerValue>playerValue):
                     print("You have ", playerValue, " and the dealer has ", dealerValue, ".\nThe dealer wins :(")
                     playermoney-=(bet+buyin)
+                elif(dealerValue==playerValue):
+                    print("You have ", playerValue, " and the dealer has ", dealerValue, ".\nTie... :|")
         if again == '': 
             if (playermoney==0):
                 print("you are out of money. :( Ending game.")

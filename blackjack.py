@@ -1,6 +1,4 @@
 import random
-from operator import itemgetter
-from natsort import natsorted
 from cards import createCards
 # from termcolor import colored
 
@@ -50,7 +48,7 @@ def main():
         print("You have ", *playerHand)
         print("Your hand has a value of ", playerValue)
         if playerValue == 21:
-            print("21! You win!")
+            print("21! You win! :)")
             playerWins+=1
         else:
             while(decision != 'STAY'):
@@ -73,7 +71,7 @@ def main():
                 print("Bust :(")
                 dealerWins+=1
             elif playerValue == 21:
-                print("21! You win!")
+                print("21! You win! :)")
                 playerWins+=1
             else:
                 print("The dealer has ", *dealerHand, " which is a value of ", dealerValue)
@@ -87,16 +85,18 @@ def main():
                     dealerValue=handCalculator(dealerHand)
                     print("The dealer now has ", *dealerHand, " which is a value of ", dealerValue)
                     if dealerValue>21: 
-                        print("Dealer busts. You Win!")
+                        print("Dealer busts. You Win! :)")
                         playerWins+=1
                 if dealerValue>21:
                     continue
                 elif (dealerValue<playerValue):
-                    print("You have ", playerValue, " and the dealer has ", dealerValue, "\nYou win!")
+                    print("You have ", playerValue, " and the dealer has ", dealerValue, "\nYou win! :)")
                     playerWins+=1
                 elif(dealerValue>playerValue):
                     print("You have ", playerValue, " and the dealer has ", dealerValue, ".\nThe dealer wins :(")
                     dealerWins+=1
+                elif(dealerValue==playerValue):
+                    print("You have ", playerValue, " and the dealer has ", dealerValue, ".\nTie... :|")
         print("You have won ", playerWins, " times and the dealer has won ", dealerWins, " times")
         if again == '': 
             again=input("Would you like to play again?(default is yes) ")
