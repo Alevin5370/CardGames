@@ -28,11 +28,14 @@ def handCalculator(hand):
 def main():
     playermoney=200
     # dealerWins=0
-    buyin=20
     print("Welcome to Blackjack: \n")
     while(True):
+        buyin=20
         print("You have $", playermoney)
         print("The buy in is $", buyin)
+        if playermoney<buyin:
+            buyin=playermoney
+            print("you do not have enough for the buy in so it has been lowered to", buyin)
         decision = ''
         again=''
         playerHand = []
