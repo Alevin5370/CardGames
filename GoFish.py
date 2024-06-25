@@ -1,11 +1,8 @@
 import random
 from cards import createCards
-# from termcolor import colored
 
 def shuffleCards():
     deck = createCards()
-    # shuffledDeck = []
-    # print("Shuffling deck")
     for i in range(1,3):
         random.shuffle(deck)
     return deck
@@ -81,6 +78,8 @@ def main():
             if(bookIsIn(playerHand)):
                 playerBooks+=1
                 print("You have ", playerBooks, " books. You now have ", *playerHand)
+                if len(playerHand)==0:
+                    break
         else:
             print("Go Fish!")
             fishcard=deck.pop(0)
@@ -89,7 +88,9 @@ def main():
             if(bookIsIn(playerHand)):
                 playerBooks+=1
                 print("You have ", playerBooks, " books. You now have ", *playerHand)
-            if(fishcard[0]==decision):
+                if len(playerHand)==0:
+                    break
+            if(str(fishcard[0])==decision):
                 continue
             else:
                 dealersTurn=True
@@ -101,19 +102,32 @@ def main():
                         giveCard(dealerChoice, dealerHand, playerHand)
                         if(bookIsIn(dealerHand)):
                             dealerBooks+=1
-                            print("The dealer has ", dealerBooks, " books.")                          
+                            print("The dealer has ", dealerBooks, " books.")
+                            if len(dealerHand)==0:
+                                break                      
                     else:
                         print("Dealer must fish!")
                         fishcard=deck.pop(0)
                         dealerHand.append(fishcard)
                         if(bookIsIn(dealerHand)):
-                            print("Thats a book")
                             dealerBooks+=1
                             print("The dealer got a ",fishcard ," and now has ", dealerBooks, " books.")
-                        if(fishcard[0]==decision):
-                            continue
+                            if len(dealerHand)==0:
+                                break
+                        if(str(fishcard[0])==dealerChoice):
+                            dealersTurn=True
                         else:
-                            break
-
+                            dealersTurn=False
+    if len(dealerHand)==0:
+        print("dealer is out of cards")
+    elif len(playerHand)==0:
+        print("you are out of cards")
+    print("you end the game with ", playerBooks, "books and the dealer had ", dealerBooks)
+    if playerBooks>dealerBooks:
+        print("You win!!")
+    elif playerBooks<dealerBooks:
+        print("You lose")
+    elif playerBooks==dealerBooks:
+        print("Tie")
 if __name__ == "__main__":
     main()
