@@ -9,6 +9,7 @@ def shuffleCards():
 
 
 def bookIsIn(hand):
+    check=None
     for card in hand:
         if 'check' in locals():
             if check == True:
@@ -25,14 +26,15 @@ def bookIsIn(hand):
     return check
 
 def cardIsIn(value, hand):
+    test=None
     for card in hand:
         temp=str(card[0])
         if temp==value:
-            check=True
+            test=True
             break
         else: 
-            check=False
-    return check
+            test=False
+    return test
         
 def giveCard(value, taker, giver):
     for card in giver:
@@ -58,7 +60,7 @@ def main():
                 playerBooks+=1
             else: 
                 search=False    
-    print("You have ", playerBooks, " books. You now have ", *playerHand)
+    print("You have ", playerBooks, " books.")
     search=True
     while (search):
             if bookIsIn(dealerHand):
@@ -68,11 +70,13 @@ def main():
     print("The dealer has ", dealerBooks, " books.")
     while(len(playerHand)!=0 or len(dealerHand)!=0):       
         while (True):
+            print("You have ", *playerHand)
             decision=input("What would you like to ask for? ")
             if cardIsIn(decision,playerHand):
                 break
             else:
-                print("that card is not in your hand")
+                print("That card is not in your hand")
+                
         if cardIsIn(decision, dealerHand):
             giveCard(decision, playerHand, dealerHand)
             if(bookIsIn(playerHand)):
@@ -119,10 +123,10 @@ def main():
                         else:
                             dealersTurn=False
     if len(dealerHand)==0:
-        print("dealer is out of cards")
+        print("Dealer is out of cards")
     elif len(playerHand)==0:
-        print("you are out of cards")
-    print("you end the game with ", playerBooks, "books and the dealer had ", dealerBooks)
+        print("You are out of cards")
+    print("You end the game with ", playerBooks, "books and the dealer had ", dealerBooks)
     if playerBooks>dealerBooks:
         print("You win!!")
     elif playerBooks<dealerBooks:
