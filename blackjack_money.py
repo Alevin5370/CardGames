@@ -53,7 +53,9 @@ def playHand(dealerHand, playerHand, deck, playerBusts):
                 states[playerBusts] = True
                 break
 
-def evaluteHand(playerValue, dealerValue, bet, playermoney):
+def evaluteHand(playerValue, dealerValue, bet, playermoney, handname=None):
+    if handname:
+        print("Evaluating ", handname, "...")
     if playerValue == 21:
         print("21! You win! :)")
         states[playermoney]+=(states[bet]*1.5)
@@ -65,10 +67,10 @@ def evaluteHand(playerValue, dealerValue, bet, playermoney):
             print("You have ", playerValue, " and the dealer has ", dealerValue, "\nYou win! :)")
             states[playermoney]+=(states[bet]*1.5)
         elif(dealerValue>playerValue):
-            print("You have ", playerValue, " and the dealer has ", dealerValue, ".\nThe dealer wins :(")
+            print("You have ", playerValue, " and the dealer has ", dealerValue, "\nThe dealer wins :(")
             states[playermoney]-=(states[bet])
         elif(dealerValue==playerValue):
-            print("You have ", playerValue, " and the dealer has ", dealerValue, ".\nTie... :|")
+            print("You have ", playerValue, " and the dealer has ", dealerValue, "\nTie...   :/")
 
 def dealerPlay(dealerHand, deck, playerValue, hasDealerPlayed):
     dealerValue=handCalculator(dealerHand)
@@ -110,7 +112,6 @@ def main():
         playerValue=0
         dealerHand=[]
         dealerValue=0
-        doubleResult= False
         print("Shuffling and Dealing cards...")
         deck=shuffleCards()
         playerHand.append(deck.pop(0))
@@ -154,15 +155,15 @@ def main():
                     if states['playerBusts1'] != True:
                         dealerPlay(dealerHand, deck, hand1Value, 'hasDealerPlayed')
                         dealerValue = handCalculator(dealerHand)
-                        evaluteHand(hand1Value, dealerValue, 'bet', 'playermoney')
+                        evaluteHand(hand1Value, dealerValue, 'bet', 'playermoney', 'Hand 1')
                     if states['playerBusts2'] != True:
                         if states['hasDealerPlayed'] == True:
                             dealerValue = handCalculator(dealerHand)
-                            evaluteHand(hand2Value, dealerValue, 'split', 'playermoney')
+                            evaluteHand(hand2Value, dealerValue, 'split', 'playermoney', 'Hand 2')
                         else:
                             dealerPlay(dealerHand, deck, hand2Value, 'hasDealerPlayed')
                             dealerValue = handCalculator(dealerHand)
-                            evaluteHand(hand2Value, dealerValue, 'split', 'playermoney')
+                            evaluteHand(hand2Value, dealerValue, 'split', 'playermoney', 'Hand 2')
         else:
             doubleDecision = input("Would you like to double down? (yes/no) ")
             doubleDecision = doubleDecision.upper()
