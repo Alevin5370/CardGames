@@ -53,7 +53,7 @@ def playHand(dealerHand, playerHand, deck, playerBusts):
 def evaluteHand(playerValue, dealerValue, bet, playermoney):
     if playerValue == 21:
         print("21! You win! :)")
-        playermoney+=(bet)
+        states[playermoney]+=(bet)
     else:
         if dealerValue>21: 
             print("Dealer busts. You Win! :)")
@@ -179,3 +179,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
