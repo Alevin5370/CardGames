@@ -110,6 +110,7 @@ def main():
         playerValue=0
         dealerHand=[]
         dealerValue=0
+        doubleResult= False
         print("Shuffling and Dealing cards...")
         deck=shuffleCards()
         playerHand.append(deck.pop(0))
@@ -121,16 +122,7 @@ def main():
         print("You have ", *playerHand)
         print("Your hand has a value of ", playerValue)
         print("The dealer has a ", dealerHand[0])   
-        doubleDecision = input("Would you like to double down? (yes/no) ")
-        doubleDecision = doubleDecision.upper()
-        doubleDecision.strip()
-        if doubleDecision == 'YES':
-            if states['playermoney']<(states['bet']*2):
-                print("You do not have enough money to double down.")
-            else:
-                states['bet']=states['bet']*2
-                print("Your bet has been increased to $", states['bet'])
-        elif playerHand[0][0] == playerHand[1][0]:
+        if playerHand[0][0] == playerHand[1][0]:
             print("You have a pair of ", playerHand[0][0], "s!")
             splitDecision = input("Would you like to split? (yes/no) ")
             splitDecision = splitDecision.upper()
@@ -172,6 +164,15 @@ def main():
                             dealerValue = handCalculator(dealerHand)
                             evaluteHand(hand2Value, dealerValue, 'split', 'playermoney')
         else:
+            doubleDecision = input("Would you like to double down? (yes/no) ")
+            doubleDecision = doubleDecision.upper()
+            doubleDecision.strip()
+            if doubleDecision == 'YES':
+                if states['playermoney']<(states['bet']*2):
+                    print("You do not have enough money to double down.")
+                else:
+                    print("Doubling down...")
+                    states['bet']*=2
             playHand(dealerHand, playerHand, deck, 'playerBusts1')
             playerValue=handCalculator(playerHand)
             print("Final hand: ", *playerHand, " Value: ", playerValue)
