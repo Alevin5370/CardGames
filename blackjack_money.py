@@ -1,7 +1,8 @@
 import random, sys
 from time import sleep
 from cards import createCards
-
+# SPLIT NEEDS TO HAVE BETTING FIGURED OUT (MAYBE)
+# CURRENTLY BET IS DOUBLED BUT SPLIT IS NOT ADDED TO PAYOUT CALCULATIONS
 states = {}
 states.update({
     "playerBusts1": False,
@@ -35,6 +36,7 @@ def handCalculator(hand):
 def playHand(dealerHand, playerHand, deck, playerBusts):
     decision = ''
     while(decision != 'STAY'):    
+        print("The dealer has a ", dealerHand[0])   
         decision=input("would you like to hit or stay? ")
         decision=decision.upper()
         decision.strip()
@@ -47,8 +49,7 @@ def playHand(dealerHand, playerHand, deck, playerBusts):
             print("New hand: ", *playerHand)
             playerValue=handCalculator(playerHand)
             print("You now have: ", playerValue)
-            sleep(1)
-            print("The dealer has a ", dealerHand[0])   
+            sleep(1) 
             if playerValue>21:
                 states[playerBusts] = True
                 break
@@ -103,7 +104,7 @@ def main():
                 continue
             if(states['playermoney']<(states['bet'])):
                 print("you do not have that much money")
-            elif(states['bet']<0):
+            elif(states['bet']<=0):
                 print("nice try")
             else:
                 break
