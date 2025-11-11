@@ -1,8 +1,7 @@
 import random, sys
 from time import sleep
 from cards import createCards
-# SPLIT NEEDS TO HAVE BETTING FIGURED OUT (MAYBE)
-# CURRENTLY BET IS DOUBLED BUT SPLIT IS NOT ADDED TO PAYOUT CALCULATIONS
+
 states = {}
 states.update({
     "playerBusts1": False,
@@ -95,7 +94,7 @@ def main():
         print("You have $", states['playermoney'])
         while(True):
             try:
-                states['bet']=int(input("How much would you like to bet? "))
+                states['bet']=float(input("How much would you like to bet? "))
             except KeyboardInterrupt:
                 print("\nExiting game.")
                 sys.exit()
@@ -109,6 +108,7 @@ def main():
             else:
                 break
         again=''
+        splitDecision = ''
         playerHand = []
         playerValue=0
         dealerHand=[]
@@ -125,56 +125,77 @@ def main():
         print("Your hand has a value of ", playerValue)
         print("The dealer has a ", dealerHand[0])   
         if playerHand[0][0] == playerHand[1][0]:
-            print("You have a pair of ", playerHand[0][0], "s!")
-            splitDecision = input("Would you like to split? (yes/no) ")
-            splitDecision = splitDecision.upper()
-            splitDecision.strip()
-            if splitDecision == 'YES':
-                if states['playermoney']<(states['bet']*2):
-                    print("You do not have enough money to split.")
+            while True:
+                print("You have a pair of ", str(playerHand[0][0]) + "s!")
+                splitDecision = input("Would you like to split? (yes/no) ")
+                splitDecision = splitDecision.upper()
+                splitDecision.strip()
+                if splitDecision == 'YES':
+                    break
+                elif splitDecision == 'NO':
+                    break
                 else:
-                    print("Splitting hand...")
-                    hand1 = [playerHand[0], deck.pop(0)]
-                    hand2 = [playerHand[1], deck.pop(0)]
-                    states['split']=states['bet']
-                    print("Playing Hand 1:")
-                    print("Hand 1: ", *hand1)
-                    hand1Value = handCalculator(hand1)
-                    print("Hand 1 value: ", hand1Value)
-                    playHand(dealerHand, hand1, deck, 'playerBusts1')
-                    hand1Value = handCalculator(hand1)
-                    print("Final Hand 1: ", *hand1, " Value: ", hand1Value)
-                    sleep(1)
-                    print("Playing Hand 2:")
-                    print("Hand 2: ", *hand2)
-                    hand2Value = handCalculator(hand2)
-                    print("Hand 2 value: ", hand2Value)
-                    playHand(dealerHand, hand2, deck, 'playerBusts2')
-                    hand2Value = handCalculator(hand2)
-                    print("Final Hand 2: ", *hand2, " Value: ", hand2Value)
-                    sleep(1)
-                    if states['playerBusts1'] != True:
-                        dealerPlay(dealerHand, deck, hand1Value, 'hasDealerPlayed')
+                    print("Please enter a valid response.")
+                    continue
+        if splitDecision == 'YES':
+            if states['playermoney']<(states['bet']*2):
+                print("You do not have enough money to split.")
+            else:
+                print("Splitting hand...")
+                hand1 = [playerHand[0], deck.pop(0)]
+                hand2 = [playerHand[1], deck.pop(0)]
+                states['split']=states['bet']
+                print("Playing Hand 1:")
+                print("Hand 1: ", *hand1)
+                hand1Value = handCalculator(hand1)
+                print("Hand 1 value: ", hand1Value)
+                playHand(dealerHand, hand1, deck, 'playerBusts1')
+                hand1Value = handCalculator(hand1)
+                print("Final Hand 1: ", *hand1, " Value: ", hand1Value)
+                sleep(1)
+                print("Playing Hand 2:")
+                print("Hand 2: ", *hand2)
+                hand2Value = handCalculator(hand2)
+                print("Hand 2 value: ", hand2Value)
+                playHand(dealerHand, hand2, deck, 'playerBusts2')
+                hand2Value = handCalculator(hand2)
+                print("Final Hand 2: ", *hand2, " Value: ", hand2Value)
+                sleep(1)
+                if states['playerBusts1'] != True:
+                    dealerPlay(dealerHand, deck, hand1Value, 'hasDealerPlayed')
+                    dealerValue = handCalculator(dealerHand)
+                    evaluteHand(hand1Value, dealerValue, 'bet', 'playermoney', 'Hand 1')
+                else:
+                    print("Hand 1 Bust :(")
+                    states['playermoney']-=(states['bet'])
+                if states['playerBusts2'] != True:
+                    if states['hasDealerPlayed'] == True:
                         dealerValue = handCalculator(dealerHand)
-                        evaluteHand(hand1Value, dealerValue, 'bet', 'playermoney', 'Hand 1')
-                    if states['playerBusts2'] != True:
-                        if states['hasDealerPlayed'] == True:
-                            dealerValue = handCalculator(dealerHand)
-                            evaluteHand(hand2Value, dealerValue, 'split', 'playermoney', 'Hand 2')
-                        else:
-                            dealerPlay(dealerHand, deck, hand2Value, 'hasDealerPlayed')
-                            dealerValue = handCalculator(dealerHand)
-                            evaluteHand(hand2Value, dealerValue, 'split', 'playermoney', 'Hand 2')
-        else:
-            doubleDecision = input("Would you like to double down? (yes/no) ")
-            doubleDecision = doubleDecision.upper()
-            doubleDecision.strip()
-            if doubleDecision == 'YES':
-                if states['playermoney']<(states['bet']*2):
-                    print("You do not have enough money to double down.")
+                        evaluteHand(hand2Value, dealerValue, 'split', 'playermoney', 'Hand 2')
+                    else:
+                        dealerPlay(dealerHand, deck, hand2Value, 'hasDealerPlayed')
+                        dealerValue = handCalculator(dealerHand)
+                        evaluteHand(hand2Value, dealerValue, 'split', 'playermoney', 'Hand 2')
                 else:
-                    print("Doubling down...")
-                    states['bet']*=2
+                    print("Hand 2 Bust :(")
+                    states['playermoney']-=(states['split'])
+        else:
+            while True:
+                doubleDecision = input("Would you like to double down? (yes/no) ")
+                doubleDecision = doubleDecision.upper()
+                doubleDecision.strip()
+                if doubleDecision == 'YES':
+                    if states['playermoney']<(states['bet']*2):
+                        print("You do not have enough money to double down.")
+                    else:
+                        print("Doubling down...")
+                        states['bet']*=2
+                    break
+                elif doubleDecision == 'NO':
+                    break
+                else:
+                    print("Please enter a valid response.")
+                    continue
             playHand(dealerHand, playerHand, deck, 'playerBusts1')
             playerValue=handCalculator(playerHand)
             print("Final hand: ", *playerHand, " Value: ", playerValue)
