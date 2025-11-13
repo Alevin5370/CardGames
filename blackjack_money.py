@@ -7,9 +7,9 @@ states.update({
     "playerBusts1": False,
     "playerBusts2": False,
     "hasDealerPlayed" : False,
-    "playermoney": 200,
-    "bet": 0,
-    "split": 0,
+    "playermoney": 200.00,
+    "bet": 0.0,
+    "split": 0.0,
     "cardsInDeck": 0
     })
 
@@ -117,6 +117,7 @@ def main():
                 break
         again=''
         splitDecision = ''
+        doubleDecision = ''
         playerHand = []
         playerValue=0
         dealerHand=[]
@@ -196,6 +197,8 @@ def main():
                     states['playermoney']-=(states['split'])
         else:
             while True:
+                if playerValue==21:
+                    break
                 doubleDecision = input("Would you like to double down? (yes/no) ")
                 doubleDecision = doubleDecision.upper()
                 doubleDecision.strip()
@@ -211,7 +214,17 @@ def main():
                 else:
                     print("Please enter a valid response.")
                     continue
-            playHand(dealerHand, playerHand, deck, 'playerBusts1')
+            if doubleDecision == 'YES':
+                playerHand.append(deck.pop(0))
+                states['cardsInDeck'] -= 1
+                playerValue=handCalculator(playerHand)
+                if playerValue>21:
+                    states['playerBusts1'] = True
+            else:
+                if playerValue==21:
+                    None
+                else:
+                    playHand(dealerHand, playerHand, deck, 'playerBusts1')
             playerValue=handCalculator(playerHand)
             print("Final hand: ", *playerHand, " Value: ", playerValue)
             sleep(1)
@@ -238,5 +251,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
