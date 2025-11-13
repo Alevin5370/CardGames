@@ -101,7 +101,7 @@ def main():
         print("You have $", states['playermoney'])
         while(True):
             try:
-                states['bet']=float(input("How much would you like to bet? "))
+                states['bet']=float(input("How much would you like to bet? $"))
             except KeyboardInterrupt:
                 print("\nExiting game.")
                 sys.exit()
