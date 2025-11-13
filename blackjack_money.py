@@ -98,7 +98,7 @@ def dealerPlay(dealerHand, deck, playerValue, hasDealerPlayed):
 def main():
     print("Welcome to Blackjack: \n")
     while(True):
-        print("You have $", states['playermoney'])
+        print("You have $" + str(states['playermoney']))
         while(True):
             try:
                 states['bet']=float(input("How much would you like to bet? $"))
@@ -237,3 +237,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
