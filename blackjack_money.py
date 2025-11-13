@@ -128,6 +128,7 @@ def main():
         if states['cardsInDeck']<15:
             print("Shuffling and Dealing cards...")
             deck=shuffleCards()
+            sleep(1)
         playerHand.append(deck.pop(0))
         states['cardsInDeck'] -= 1
         dealerHand.append(deck.pop(0))
@@ -140,6 +141,7 @@ def main():
         dealerValue=handCalculator(dealerHand)
         print("You have ", *playerHand)
         print("Your hand has a value of ", playerValue)
+        sleep(.8)
         print("The dealer has a ", dealerHand[0])   
         if playerHand[0][0] == playerHand[1][0]:
             while True:
