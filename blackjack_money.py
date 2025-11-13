@@ -57,8 +57,11 @@ def evaluteHand(playerValue, dealerValue, bet, playermoney, handname=None):
     if handname:
         print("Evaluating ", handname, "...")
     if playerValue == 21:
-        print("21! You win! :)")
-        states[playermoney]+=(states[bet]*1.5)
+        if(dealerValue==playerValue):
+            print("You have ", playerValue, " and the dealer has ", dealerValue, "\nTie...   :/")
+        else:
+            print("21! You win! :)")
+            states[playermoney]+=(states[bet]*1.5)
     else:
         if dealerValue>21: 
             print("Dealer busts. You Win! :)")
