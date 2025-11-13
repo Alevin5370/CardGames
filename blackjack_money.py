@@ -9,13 +9,15 @@ states.update({
     "hasDealerPlayed" : False,
     "playermoney": 200,
     "bet": 0,
-    "split": 0 
+    "split": 0,
+    "cardsInDeck": 0
     })
 
 def shuffleCards():
     deck = createCards()
     for i in range(1,3):
         random.shuffle(deck)
+    states['cardsInDeck'] = len(deck)
     return deck
 
 def handCalculator(hand):
@@ -41,6 +43,7 @@ def playHand(dealerHand, playerHand, deck, playerBusts):
         decision.strip()
         if decision == 'HIT':
             playerHand.append(deck.pop(0))
+            states['cardsInDeck'] -= 1
             for card in playerHand:
                 if card[0] == 'A':
                     playerHand.remove(card)
@@ -82,6 +85,7 @@ def dealerPlay(dealerHand, deck, playerValue, hasDealerPlayed):
         print("The dealer hits...")
         sleep(1.5)
         dealerHand.append(deck.pop(0))
+        states['cardsInDeck'] -= 1
         for card in dealerHand:
             if card[0] == 'A':
                 dealerHand.remove(card)
@@ -116,12 +120,17 @@ def main():
         playerValue=0
         dealerHand=[]
         dealerValue=0
-        print("Shuffling and Dealing cards...")
-        deck=shuffleCards()
+        if states['cardsInDeck']<15:
+            print("Shuffling and Dealing cards...")
+            deck=shuffleCards()
         playerHand.append(deck.pop(0))
+        states['cardsInDeck'] -= 1
         dealerHand.append(deck.pop(0))
+        states['cardsInDeck'] -= 1
         playerHand.append(deck.pop(0))
+        states['cardsInDeck'] -= 1
         dealerHand.append(deck.pop(0))
+        states['cardsInDeck'] -= 1
         playerValue=handCalculator(playerHand)
         dealerValue=handCalculator(dealerHand)
         print("You have ", *playerHand)
@@ -146,7 +155,9 @@ def main():
             else:
                 print("Splitting hand...")
                 hand1 = [playerHand[0], deck.pop(0)]
+                states['cardsInDeck'] -= 1
                 hand2 = [playerHand[1], deck.pop(0)]
+                states['cardsInDeck'] -= 1
                 states['split']=states['bet']
                 print("Playing Hand 1:")
                 print("Hand 1: ", *hand1)
