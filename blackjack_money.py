@@ -37,6 +37,9 @@ def handCalculator(hand):
 def playHand(dealerHand, playerHand, deck, playerBusts):
     decision = ''
     while(decision != 'STAY'):    
+        playerValue=handCalculator(playerHand)
+        if playerValue==21:
+            break
         print("The dealer has a ", dealerHand[0])   
         decision=input("would you like to hit or stay? ")
         decision=decision.upper()
