@@ -1,7 +1,9 @@
 import random, sys
+from scoreCheck import get_high_score, update_high_score
 from time import sleep
 from cards import createCards
 
+GAME = "blackjack"
 states = {}
 states.update({
     "playerBusts1": False,
@@ -97,9 +99,22 @@ def dealerPlay(dealerHand, deck, playerValue, hasDealerPlayed):
         print("The dealer now has ", *dealerHand, " which is a value of ", dealerValue)
         sleep(1)
     states[hasDealerPlayed] = True   
-    
+
+def highScoreCheck():
+    score, date, time = get_high_score(GAME)
+    if score == 0:
+        print("No high score yet")
+    else:
+        print(f"Current high score: ${score:.2f} set on {date} at {time}")
+
+def highScoreUpdate():
+    if update_high_score(GAME, states['playermoney']):
+        print("Congratulations! You set a new high score!")
+    else: None
+
 def main():
     print("Welcome to Blackjack: \n")
+    highScoreCheck()
     while(True):
         money=states['playermoney']
         print(f'You have ${money:.2f}')
@@ -214,7 +229,7 @@ def main():
                         print("Doubling down...")
                         states['bet']*=2
                     break
-                elif doubleDecision == 'NO':
+                elif doubleDecision == 'NO' or doubleDecision == 'N':
                     break
                 else:
                     print("Please enter a valid response.")
@@ -248,6 +263,7 @@ def main():
             if again.upper() == "NO" or again.upper() == "N":
                 money=states['playermoney']
                 print(f'Thanks for playing! You are leaving with ${money:.2f}')
+                highScoreUpdate()
                 break
             else:
                 states['playerBusts1']=False
