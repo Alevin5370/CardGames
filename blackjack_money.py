@@ -36,15 +36,15 @@ def handCalculator(hand):
 
 def playHand(dealerHand, playerHand, deck, playerBusts):
     decision = ''
-    while(decision != 'STAY'):    
+    while not (decision == 'S' or decision == 'STAY'):    
         playerValue=handCalculator(playerHand)
         if playerValue==21:
             break
         print("The dealer has a ", dealerHand[0])   
-        decision=input("would you like to hit or stay? ")
+        decision=input("would you like to hit(h) or stay(s)? ")
         decision=decision.upper()
         decision.strip()
-        if decision == 'HIT':
+        if decision == 'H' or decision == 'HIT':
             playerHand.append(deck.pop(0))
             states['cardsInDeck'] -= 1
             for card in playerHand:
@@ -146,12 +146,12 @@ def main():
         if playerHand[0][0] == playerHand[1][0]:
             while True:
                 print("You have a pair of ", str(playerHand[0][0]) + "s!")
-                splitDecision = input("Would you like to split? (yes/no) ")
+                splitDecision = input("Would you like to split? yes(y) or no(n) ")
                 splitDecision = splitDecision.upper()
                 splitDecision.strip()
-                if splitDecision == 'YES':
+                if splitDecision == 'YES' or splitDecision == 'Y':
                     break
-                elif splitDecision == 'NO':
+                elif splitDecision == 'NO' or splitDecision == 'N':
                     break
                 else:
                     print("Please enter a valid response.")
@@ -204,10 +204,10 @@ def main():
             while True:
                 if playerValue==21:
                     break
-                doubleDecision = input("Would you like to double down? (yes/no) ")
+                doubleDecision = input("Would you like to double down? yes(y) or no(n) ")
                 doubleDecision = doubleDecision.upper()
                 doubleDecision.strip()
-                if doubleDecision == 'YES':
+                if doubleDecision == 'YES' or doubleDecision == 'Y':
                     if states['playermoney']<(states['bet']*2):
                         print("You do not have enough money to double down.")
                     else:
@@ -219,7 +219,7 @@ def main():
                 else:
                     print("Please enter a valid response.")
                     continue
-            if doubleDecision == 'YES':
+            if doubleDecision == 'YES' or doubleDecision == 'Y':
                 playerHand.append(deck.pop(0))
                 states['cardsInDeck'] -= 1
                 playerValue=handCalculator(playerHand)
@@ -245,8 +245,9 @@ def main():
                 print("you are out of money. :( Ending game.")
                 break
             again=input("Would you like to play again?(default is yes) ")
-            if again.upper() == "NO":
-                print("Thanks for playing! You are leaving with $", states['playermoney'])
+            if again.upper() == "NO" or again.upper() == "N":
+                money=states['playermoney']
+                print(f'Thanks for playing! You are leaving with ${money:.2f}')
                 break
             else:
                 states['playerBusts1']=False
