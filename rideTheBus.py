@@ -63,10 +63,9 @@ def main():
     while(True):
         gameBeingPlayed = True
         while(gameBeingPlayed):
-            money=states['playermoney']
             print("\nWelcome to Ride the Bus!\n")
             highScoreCheck()
-            print(f'You have ${money:.2f}')
+            print(f'You have ${states["playermoney"]:.2f}')
             while(True):
                 try:
                     states['bet']=float(input("How much would you like to bet? $"))
@@ -179,9 +178,15 @@ def main():
         print("Thanks for playing Ride the Bus!")
         repeat = ""
         while(repeat != 'y' and repeat != 'n'):
+            if (states['playermoney']==0):
+                print("you are out of money. :( Ending game.")
+                gameBeingPlayed = False
+                repeat = 'n'
+                break
             repeat=input("Would you like to play again? (y/n): ").lower()
         if(repeat == 'n'):
-            print(f"You cash out with ${states['playermoney']:.2f}")
+            if not (states['playermoney']==0):
+                print(f"You cash out with ${states['playermoney']:.2f}")
             highScoreUpdate()
             print("Goodbye!")
             break
