@@ -1,5 +1,9 @@
+from scoreCheck import get_high_score, update_high_score
 import random
+from time import sleep
 from cards import createCards
+
+GAME = "GoFish"
 
 def shuffleCards():
     deck = createCards()
@@ -7,28 +11,50 @@ def shuffleCards():
         random.shuffle(deck)
     return deck
 
+def highScoreCheck():
+    score, date, time = get_high_score(GAME)
+    if score == 0:
+        print("No high score yet")
+    else:
+        time = time.split(":")
+        time12 = int(time[0])%12
+        time12 = time12 if time12 != 0 else 12
+        ampm = "AM" if int(time[0]) < 12 else "PM"
+        print(f"Current high score: {score} set on {date} at {time12}:{time[1]} {ampm}")
+
+def highScoreUpdate(books):
+    if update_high_score(GAME, books):
+        print("Congratulations! You set a new high score!")
+    else: None
 
 def bookIsIn(hand):
     check=None
     for card in hand:
-        if 'check' in locals():
-            if check == True:
-                break
+        if check == True:
+            break
         for card2 in hand:
             if (card[0]==card2[0] and card[1]!=card2[1]):
+                sleep(.5)
                 print("Thats a book of ", card[0])
-                hand.remove(card)
-                hand.remove(card2)
                 check=True
                 break
             else:
                 check=False
+        if check==True:
+            cardValue=card[0]
+            hand.remove(card)
+            for card2 in hand:
+                if cardValue==card2[0]:
+                    hand.remove(card2)
+                    break
     return check
 
 def cardIsIn(value, hand):
     test=None
     for card in hand:
         temp=str(card[0])
+        temp=temp.upper()
+        temp=temp.strip()
         if temp==value:
             test=True
             break
@@ -39,6 +65,8 @@ def cardIsIn(value, hand):
 def giveCard(value, taker, giver):
     for card in giver:
         temp=str(card[0])
+        temp=temp.upper()
+        temp=temp.strip()
         if temp==value:
             taker.append(giver.pop(giver.index(card)))
 
@@ -46,7 +74,9 @@ def main():
     playerBooks=0
     dealerBooks=0
     print("Welcome to Go Fish: \n")
+    highScoreCheck()
     print("Shuffling and Dealing cards...")
+    sleep(1)
     deck=shuffleCards()
     playerHand = []
     dealerHand=[]
@@ -54,6 +84,7 @@ def main():
         playerHand.append(deck.pop(0))
         dealerHand.append(deck.pop(0)) 
     print("You have ", *playerHand)
+    sleep(.7)
     search=True
     while (search):
             if bookIsIn(playerHand):
@@ -61,17 +92,22 @@ def main():
             else: 
                 search=False    
     print("You have ", playerBooks, " books.")
+    sleep(.7)
+    print("Checking the dealer's hand for books...")
     search=True
     while (search):
             if bookIsIn(dealerHand):
                 dealerBooks+=1
-            elif not bookIsIn(dealerHand): 
+            else: 
                 search=False    
     print("The dealer has ", dealerBooks, " books.")
-    while(len(playerHand)!=0 or len(dealerHand)!=0):       
+    sleep(.7)
+    while(len(playerHand)!=0 and len(dealerHand)!=0):       
         while (True):
             print("You have ", *playerHand)
             decision=input("What would you like to ask for? ")
+            decision=decision.upper()
+            decision=decision.strip()
             if cardIsIn(decision,playerHand):
                 break
             else:
@@ -86,39 +122,58 @@ def main():
                     break
         else:
             print("Go Fish!")
-            fishcard=deck.pop(0)
-            playerHand.append(fishcard)
+            fishcard=None
+            sleep(.5)
+            if len(deck)==0:
+                print("The deck is empty, you cannot fish")
+                break
+            else:
+                fishcard=deck.pop(0)
+                playerHand.append(fishcard)
             print ("You now have ", *playerHand)
             if(bookIsIn(playerHand)):
                 playerBooks+=1
                 print("You have ", playerBooks, " books. You now have ", *playerHand)
                 if len(playerHand)==0:
                     break
-            if(str(fishcard[0])==decision):
+            if(fishcard and (str(fishcard[0])==decision)):
                 continue
             else:
                 dealersTurn=True
                 while(dealersTurn):
+                    if len(dealerHand)==0:
+                        break
                     dealerCard=random.choice(dealerHand)
                     dealerChoice=str(dealerCard[0])
+                    dealerChoice=dealerChoice.upper()
+                    dealerChoice=dealerChoice.strip()
                     print("The dealer chose ", dealerChoice)
+                    sleep(.7)
                     if cardIsIn(dealerChoice, playerHand):
                         giveCard(dealerChoice, dealerHand, playerHand)
                         if(bookIsIn(dealerHand)):
                             dealerBooks+=1
                             print("The dealer has ", dealerBooks, " books.")
                             if len(dealerHand)==0:
+                                print("Dealer is out of cards")
                                 break                      
                     else:
                         print("Dealer must fish!")
-                        fishcard=deck.pop(0)
-                        dealerHand.append(fishcard)
+                        fishcard=None
+                        sleep(.5)
+                        if len(deck)==0:
+                            print("The deck is empty, the dealer cannot fish")
+                            break
+                        else:
+                            fishcard=deck.pop(0)
+                            dealerHand.append(fishcard)
+                        sleep(.7)
                         if(bookIsIn(dealerHand)):
                             dealerBooks+=1
                             print("The dealer got a ",fishcard ," and now has ", dealerBooks, " books.")
                             if len(dealerHand)==0:
                                 break
-                        if(str(fishcard[0])==dealerChoice):
+                        if(fishcard and (str(fishcard[0])==dealerChoice)):
                             dealersTurn=True
                         else:
                             dealersTurn=False
@@ -127,6 +182,7 @@ def main():
     elif len(playerHand)==0:
         print("You are out of cards")
     print("You end the game with ", playerBooks, "books and the dealer had ", dealerBooks)
+    highScoreUpdate(playerBooks)
     if playerBooks>dealerBooks:
         print("You win!!")
     elif playerBooks<dealerBooks:
