@@ -99,7 +99,11 @@ def highScoreCheck():
     if score == 0:
         print("No high score yet")
     else:
-        print(f"Current high score: ${score:.2f} set on {date} at {time}")
+        time = time.split(":")
+        time12 = int(time[0])%12
+        time12 = time12 if time12 != 0 else 12
+        ampm = "AM" if int(time[0]) < 12 else "PM"
+        print(f"Current high score: ${score:.2f} set on {date} at {time12}:{time[1]} {ampm}")
 
 def highScoreUpdate():
     if update_high_score(GAME, states['playermoney']):
