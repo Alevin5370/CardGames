@@ -1,6 +1,6 @@
 import json, os
 
-FILE = "CardGames\highscores.json"
+FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "highscores.json")
 
 def load_scores():
     if not os.path.exists(FILE):
